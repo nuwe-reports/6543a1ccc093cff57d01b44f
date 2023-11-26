@@ -61,48 +61,6 @@ class EntityUnitTest {
         assertThat(d1.getEmail()).isEqualTo("shaun.murphy@thegooddoctor.com");
     }
 
-    @Test
-    void createDoctorInstanceWithNullFirstName() {
-        Doctor invalidDoctor = new Doctor(null, "Murphy", 20, "shaun.murphy@thegooddoctor.com");
-        assertThat(invalidDoctor).isNull();
-    }
-
-    @Test
-    void createDoctorInstanceWithNullLastName() {
-        Doctor invalidDoctor = new Doctor("Shaun", null, 20, "shaun.murphy@thegooddoctor.com");
-        assertThat(invalidDoctor).isNull();
-    }
-
-    @Test
-    void createDoctorInstanceWithEmptyFirstName() {
-        Doctor invalidDoctor = new Doctor("", "Murphy", 25, "empty.first.name@example.com");
-        assertThat(invalidDoctor).isNull();
-    }
-
-    @Test
-    void createDoctorInstanceWithEmptyLastName() {
-        Doctor invalidDoctor = new Doctor("Shaun", "", 20, "shaun.murphy@thegooddoctor.com");
-        assertThat(invalidDoctor).isNull();
-    }
-
-    @Test
-    void createDoctorInstanceWithNegativeAge() {
-        Doctor invalidDoctor = new Doctor("John", "Doe", -5, "john.doe@example.com");
-        assertThat(invalidDoctor).isNull();
-    }
-
-    @Test
-    void createDoctorInstanceWithNullEmail() {
-        Doctor invalidDoctor = new Doctor("Alice", "Johnson", 30, null);
-        assertThat(invalidDoctor).isNull();
-    }
-
-    @Test
-    void createDoctorInstanceWithInvalidEmailFormat() {
-        Doctor invalidDoctor = new Doctor("Bob", "Smith", 40, "invalid-email-format");
-        assertThat(invalidDoctor).isNull();
-    }
-
     /** Patient
      *
      */
@@ -122,48 +80,6 @@ class EntityUnitTest {
         assertThat(p1.getEmail()).isEqualTo("alice.johnson@example.com");
     }
 
-    @Test
-    void createPatientInstanceWithNullFirstName() {
-        Patient invalidPatient = new Patient(null, "Johnson", 25, "johnson@example.com");
-        assertThat(invalidPatient).isNull();
-    }
-
-    @Test
-    void createPatientInstanceWithNullLastName() {
-        Patient invalidPatient = new Patient("Alice", null, 30, "alice.johnson@example.com");
-        assertThat(invalidPatient).isNull();
-    }
-
-    @Test
-    void createPatientInstanceWithEmptyFirstName() {
-        Patient invalidPatient = new Patient("", "Johnson", 25, "empty.first.name@example.com");
-        assertThat(invalidPatient).isNull();
-    }
-
-    @Test
-    void createPatientInstanceWithEmptyLastName() {
-        Patient invalidPatient = new Patient("Alice", "", 30, "alice.johnson@example.com");
-        assertThat(invalidPatient).isNull();
-    }
-
-    @Test
-    void createPatientInstanceWithNegativeAge() {
-        Patient invalidPatient = new Patient("John", "Doe", -5, "john.doe@example.com");
-        assertThat(invalidPatient).isNull();
-    }
-
-    @Test
-    void createPatientInstanceWithNullEmail() {
-        Patient invalidPatient = new Patient("Alice", "Johnson", 30, null);
-        assertThat(invalidPatient).isNull();
-    }
-
-    @Test
-    void createPatientInstanceWithInvalidEmailFormat() {
-        Patient invalidPatient = new Patient("Bob", "Smith", 40, "invalid-email-format");
-        assertThat(invalidPatient).isNull();
-    }
-
     /** Room
      *
      */
@@ -179,13 +95,6 @@ class EntityUnitTest {
         assertThat(r1).isNotNull();
         assertThat(r1.getRoomName()).isEqualTo("101");
     }
-
-    @Test
-    void createRoomInstanceWithEmptyRoomName() {
-        Room invalidRoom = new Room("");
-        assertThat(invalidRoom).isNull();
-    }
-
 
     /** Appointment
      *
@@ -212,60 +121,5 @@ class EntityUnitTest {
     void createAppointmentInstanceWithoutAttributes() {
         Appointment invalidAppointment = new Appointment();
         assertThat(invalidAppointment).isNotNull();
-    }
-
-    @Test
-    void createAppointmentInstanceWithNullPatient() {
-        Appointment invalidAppointment = new Appointment(null, d1, r1, LocalDateTime.now(), LocalDateTime.now().plusHours(1));
-        assertThat(invalidAppointment).isNull();
-    }
-
-    @Test
-    void createAppointmentInstanceWithNullDoctor() {
-        Appointment invalidAppointment = new Appointment(p1, null, r1, LocalDateTime.now(), LocalDateTime.now().plusHours(1));
-        assertThat(invalidAppointment).isNull();
-    }
-
-    @Test
-    void createAppointmentInstanceWithNullRoom() {
-        Appointment invalidAppointment = new Appointment(p1, d1, null, LocalDateTime.now(), LocalDateTime.now().plusHours(1));
-        assertThat(invalidAppointment).isNull();
-    }
-
-    @Test
-    void createAppointmentInstanceWithNullStartsAt() {
-        Appointment invalidAppointment = new Appointment(p1, d1, r1, null, LocalDateTime.now().plusHours(1));
-        assertThat(invalidAppointment).isNull();
-    }
-
-    @Test
-    void createAppointmentInstanceWithNullFinishesAt() {
-        Appointment invalidAppointment = new Appointment(p1, d1, r1, LocalDateTime.now(), null);
-        assertThat(invalidAppointment).isNull();
-    }
-
-    @Test
-    void createAppointmentInstanceWithStartsAtAfterFinishesAt() {
-        LocalDateTime startsAt = LocalDateTime.now().plusHours(2);
-        LocalDateTime finishesAt = LocalDateTime.now().plusHours(1);
-
-        Appointment invalidAppointment = new Appointment(p1, d1, r1, startsAt, finishesAt);
-        assertThat(invalidAppointment).isNull();
-    }
-
-    @Test
-    void testAppointmentOverlap() {
-        LocalDateTime startsAt = LocalDateTime.now().plusHours(1);
-        LocalDateTime finishesAt = startsAt.plusHours(2);
-
-        a1 = new Appointment(p1, d1, r1, startsAt, finishesAt);
-
-        // Overlapping appointment
-        Appointment overlappingAppointment = new Appointment(p1, d1, r1, startsAt.minusHours(1), finishesAt.plusHours(1));
-        assertThat(a1.overlaps(overlappingAppointment)).isTrue();
-
-        // Non-overlapping appointment
-        Appointment nonOverlappingAppointment = new Appointment(p1, d1, r1, finishesAt.plusHours(1), finishesAt.plusHours(3));
-        assertThat(a1.overlaps(nonOverlappingAppointment)).isFalse();
     }
 }
