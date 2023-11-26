@@ -18,7 +18,7 @@ This API is designed to manage appointments for a hospital. It provides endpoint
 
 ## UML Class Diagram
 
-![UML.jpg](docs%2FUML.jpg)
+![UML.jpg](UML.jpg)
 
 ## Usage
 
