@@ -56,7 +56,40 @@ public class AppointmentController {
          * Implement this function, which acts as the POST /api/appointment endpoint.
          * Make sure to check out the whole project. Specially the Appointment.java class
          */
-        return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
+
+        List<Appointment> appointmentsList = new ArrayList<>();
+        List<Appointment> newAppointments = new ArrayList<>();
+
+        // Check if any required field in the appointment is null
+        if (appointment == null || appointment.getPatient() == null || appointment.getDoctor() == null || appointment.getRoom() == null ||
+                appointment.getStartsAt() == null || appointment.getFinishesAt() == null) {
+            return new ResponseEntity<>(newAppointments, HttpStatus.BAD_REQUEST);
+        }
+
+        // Check if the appointment end time is before or equal to the start time
+        if (appointment.getFinishesAt().isBefore(appointment.getStartsAt()) || appointment.getFinishesAt().isEqual(appointment.getStartsAt())) {
+            return new ResponseEntity<>(newAppointments, HttpStatus.BAD_REQUEST);
+        }
+
+        Appointment a = new Appointment(appointment.getPatient(), appointment.getDoctor(), appointment.getRoom(),appointment.getStartsAt(),appointment.getFinishesAt());
+        appointmentRepository.findAll().forEach(appointmentsList::add);
+
+        // Check for overlaps
+        for (Appointment registeredAppointment : appointmentsList) {
+            if (a.overlaps(registeredAppointment)) {
+                return new ResponseEntity<>(newAppointments, HttpStatus.NOT_ACCEPTABLE);
+            }
+        }
+
+        // Create appointment
+        try {
+            appointmentRepository.save(a);
+            newAppointments.add(a);
+            return new ResponseEntity<>(newAppointments, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(newAppointments, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
 
